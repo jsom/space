@@ -489,9 +489,9 @@ CONST ShipTexX = 15
 CONST ShipTexY = 19
 CONST EnemyTex1X = 15
 CONST EnemyTex1Y = 19
-CONST MaxNumEnemies = 3
-CONST NumExplosionFrames = 9, MaxNumExplosions = 10
-CONST NumSmokeFrames = 7, MaxNumSmoke = 10
+CONST MaxNumEnemies = 5
+CONST NumExplosionFrames = 9, MaxNumExplosions = 5
+CONST NumSmokeFrames = 7, MaxNumSmoke = 5
 
 DIM SHARED Ship AS ShipClass
 DIM SHARED Enemy1(MaxNumEnemies) AS ShipClass
@@ -727,11 +727,8 @@ SUB RenderEnemy (Index, ChangeX, ChangeY)
       END IF
     NEXT b
   NEXT a
-  IF (Enemy1(Index).X + ChangeX <= 620) AND (Enemy1(Index).X + ChangeX >= 1) 
-AND (Enemy1(Index).Y + ChangeY <= 460) AND (Enemy1(Index).Y + ChangeY >= 1) 
-THEN
-    Enemy1(Index).X = Enemy1(Index).X + ChangeX: Enemy1(Index).Y = 
-Enemy1(Index).Y + ChangeY
+  IF (Enemy1(Index).X + ChangeX <= 620) AND (Enemy1(Index).X + ChangeX >= 1) AND (Enemy1(Index).Y + ChangeY <= 460) AND (Enemy1(Index).Y + ChangeY >= 1) THEN
+    Enemy1(Index).X = Enemy1(Index).X + ChangeX: Enemy1(Index).Y = Enemy1(Index).Y + ChangeY
   ELSE
     Enemy1(Index).X = INT(RND * 620) + 1: Enemy1(Index).Y = 0
     Score = Score - 1
@@ -751,8 +748,7 @@ SUB RenderExplosion
       FOR a = 0 TO ShipTexY
         FOR b = 0 TO ShipTexX
           IF ExplosionTex(Explosion(c).FrameState, b, a) <> 0 THEN
-            PSET (Explosion(c).X + b, Explosion(c).Y + a), 
-ExplosionTex(Explosion(c).FrameState, b, a)
+            PSET (Explosion(c).X + b, Explosion(c).Y + a), ExplosionTex(Explosion(c).FrameState, b, a)
           END IF
         NEXT b
       NEXT a
@@ -777,8 +773,7 @@ SUB RenderHealth
 END SUB
 
 SUB RenderShip (ChangeX, ChangeY)
-  IF (Ship.X + ChangeX <= 620) AND (Ship.X + ChangeX >= 1) AND (Ship.Y + 
-ChangeY <= 460) AND (Ship.Y + ChangeY >= 1) THEN
+  IF (Ship.X + ChangeX <= 620) AND (Ship.X + ChangeX >= 1) AND (Ship.Y + ChangeY <= 460) AND (Ship.Y + ChangeY >= 1) THEN
     FOR a = 0 TO ShipTexY
       FOR b = 0 TO ShipTexX
         IF ShipTex(b, a) <> 0 THEN
@@ -823,8 +818,7 @@ SUB RenderSmoke
           IF Smoke(c).FrameState = 0 THEN
             PSET (Smoke(c).X + b, Smoke(c).Y + a), 0
           ELSE
-            PSET (Smoke(c).X + b, Smoke(c).Y + a), 
-SmokeTex(Smoke(c).FrameState, b, a)
+            PSET (Smoke(c).X + b, Smoke(c).Y + a), SmokeTex(Smoke(c).FrameState, b, a)
           END IF
         NEXT b
       NEXT a
@@ -940,16 +934,12 @@ SUB UpdateBullet
       ELSE
         Bullet(b).Y = Bullet(b).Y - 6
         FOR p = 0 TO MaxNumEnemies
-          IF ((Bullet(b).X >= Enemy1(p).X) AND (Bullet(b).X <= Enemy1(p).X + 
-EnemyTex1X) AND (Bullet(b).Y >= Enemy1(p).Y) AND (Bullet(b).Y <= Enemy1(p).Y 
-+ EnemyTex1Y)) THEN
+          IF ((Bullet(b).X >= Enemy1(p).X) AND (Bullet(b).X <= Enemy1(p).X + EnemyTex1X) AND (Bullet(b).Y >= Enemy1(p).Y) AND (Bullet(b).Y <= Enemy1(p).Y + EnemyTex1Y)) THEN
             Boom (p)
             Enemy1(p).Y = 1: Enemy1(p).X = INT(RND * 620) + 1
             Score = Score + 1
           END IF
-          IF ((Bullet(b).X + 13 >= Enemy1(p).X) AND (Bullet(b).X + 13 <= 
-Enemy1(p).X + EnemyTex1X) AND (Bullet(b).Y >= Enemy1(p).Y) AND (Bullet(b).Y 
-<= Enemy1(p).Y + EnemyTex1Y)) THEN
+          IF ((Bullet(b).X + 13 >= Enemy1(p).X) AND (Bullet(b).X + 13 <= Enemy1(p).X + EnemyTex1X) AND (Bullet(b).Y >= Enemy1(p).Y) AND (Bullet(b).Y <= Enemy1(p).Y + EnemyTex1Y)) THEN
             Boom (p)
             Enemy1(p).Y = 1: Enemy1(p).X = INT(RND * 620) + 1
             Score = Score + 1
@@ -961,5 +951,4 @@ Enemy1(p).X + EnemyTex1X) AND (Bullet(b).Y >= Enemy1(p).Y) AND (Bullet(b).Y
     CALL RenderShoot
   END IF
 END SUB
-
 
